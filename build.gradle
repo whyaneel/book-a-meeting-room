@@ -1,0 +1,56 @@
+
+buildscript {
+    ext {
+        springBootVersion = '2.2.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+
+
+repositories {
+    mavenCentral()
+}
+
+
+springBoot {
+    mainClassName = 'com.org.desi.Application'
+}
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile "joda-time:joda-time:2.2"
+    testCompile "junit:junit:4.12"
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-security'
+    //compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //compile 'org.springframework.boot:spring-boot-starter-data-rest'
+    compile 'org.springframework.boot:spring-boot-starter-integration'
+    compile 'org.springframework.integration:spring-integration-file'
+    compile 'org.springframework.integration:spring-integration-http'
+    //compile 'org.springframework.integration:spring-integration-jpa'
+
+    compileOnly "org.projectlombok:lombok:1.16.16"
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    compile "org.springframework.boot:spring-boot-starter-tomcat"
+
+}
+
+configurations {
+    //runtime.exclude module: 'spring-boot-starter-tomcat'
+    runtime.exclude module: 'xml-apis'
+}
+
