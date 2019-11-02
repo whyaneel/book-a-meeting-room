@@ -1,4 +1,4 @@
-package com.org.desi.api;
+package com.prototype.booking.api;
 
 import lombok.Data;
 

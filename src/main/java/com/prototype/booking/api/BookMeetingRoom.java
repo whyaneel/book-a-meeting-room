@@ -1,4 +1,4 @@
-package com.org.desi.api;
+package com.prototype.booking.api;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -15,7 +15,7 @@ import org.springframework.integration.http.dsl.Http;
 import java.util.Arrays;
 import java.util.List;
 
-import com.org.desi.api.RoomsInfo.*;
+import com.prototype.booking.api.RoomsInfo.*;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.support.MessageBuilder;
 
