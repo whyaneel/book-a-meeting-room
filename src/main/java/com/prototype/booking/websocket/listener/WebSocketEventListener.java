@@ -11,17 +11,17 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @Slf4j
 public class WebSocketEventListener {
   @EventListener
-  public void handleWebSocketConnectListener(SessionConnectedEvent event) {
-    log.info("WebSocket Session Connected");
+  public void onConnect(SessionConnectedEvent event) {
+    StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+    log.info("WebSocket Session [{}] Connected", headerAccessor.getSessionId());
   }
 
   @EventListener
-  public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-    log.info("WebSocket Session Disconnected");
+  public void onDisconnect(SessionDisconnectEvent event) {
     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-    String uuid = (String) headerAccessor.getSessionAttributes().get("uuid");
-    if (uuid != null) {
-      log.info("{} Disconnected : ", uuid);
+    log.info("WebSocket Session [{}] Disconnected", headerAccessor.getSessionId());
+    if (headerAccessor.getSessionAttributes().get("uuid") != null) {
+      log.info("User [{}] Left", headerAccessor.getSessionAttributes().get("uuid"));
     }
   }
 }

@@ -7,7 +7,6 @@
   </appender>
 
   <logger level="DEBUG" name="com.prototype.booking"/>
-  <logger level="DEBUG" name="org.springframework.web.filter.CommonsRequestLoggingFilter"/>
   <logger level="INFO" name="org.springframework"/>
 
   <root level="WARN">
