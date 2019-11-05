@@ -13,7 +13,6 @@ import org.springframework.integration.config.EnableIntegration;
 public class Application extends SpringBootServletInitializer {
 
     public static void main (String[] args) {
-
         SpringApplication.run(Application.class, args);
     }
 
