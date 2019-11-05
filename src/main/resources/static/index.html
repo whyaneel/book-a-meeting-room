@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <title>Meeting Room Booking Facility</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+</head>
+<body>
+<noscript>
+  <h2>Sorry! Your browser doesn't support Javascript</h2>
+</noscript>
+
+<div id="entry-page" style="display:block">
+  <div class="entry-page-container">
+    <form id="entryForm" name="entryForm">
+      <div class="form-group">
+        <button type="submit">Book Meeting</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="main-page" style="display:none">
+  <div class="main-page-container">
+    <div class="main-header">
+      <h2>Book A Meeting Room</h2>
+    </div>
+    <form id="mainForm" name="mainForm">
+      <div class="form-group">
+          <button type="submit">Send</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
