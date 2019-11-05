@@ -26,7 +26,6 @@ public class RoomsInfo {
     private Integer capacity;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "roomCode", cascade = CascadeType.ALL)
-    //@OrderBy("description asc")
-    private List<RoomTimings> roomTimings;
+    private List<Timings> roomTimings;
 
 }

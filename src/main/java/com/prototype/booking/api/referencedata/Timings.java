@@ -1,5 +1,6 @@
 package com.prototype.booking.api.referencedata;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TIMINGS")
 @Data
-public class RoomTimings {
+public class Timings {
 
     @Id
     @Column
@@ -19,6 +20,7 @@ public class RoomTimings {
     @Column
     private String timeSlot;
 
+    @JsonIgnore
     @Column
     private String roomCode;
 

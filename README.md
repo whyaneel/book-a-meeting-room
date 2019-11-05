@@ -11,12 +11,13 @@ The Application is implemented in DSL integration flow using H2
 Application Should be Running at http://localhost:8080/
 
 - Book Meeting Room App
+    
     POST http://localhost:8080/api/bot/booking
     Request:
     {
     	"userInfo": {
     		"empId" : "101",
-    		"email" : "AAA@PROTOTYPE.GURU"
+    		"email" : "xx@xxx.com"
     	},
     	"roomInfo": {
     		"roomId" : "01",
@@ -29,6 +30,7 @@ Application Should be Running at http://localhost:8080/
     }
     
 - Retrieve Available Rooms Info
+    
     GET http://localhost:8080/api/rooms
     
 H2 Console:

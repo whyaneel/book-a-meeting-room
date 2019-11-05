@@ -1,7 +1,7 @@
 package com.prototype.booking.api;
 
-import com.prototype.booking.api.referencedata.RoomTimings;
-import com.prototype.booking.api.referencedata.RoomTimingsRepository;
+import com.prototype.booking.api.referencedata.Timings;
+import com.prototype.booking.api.referencedata.TimingsRepository;
 import com.prototype.booking.api.referencedata.RoomsInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -29,7 +29,7 @@ import java.util.Optional;
 public class BookMeetingRoomFlow {
 
     @Autowired
-    RoomTimingsRepository timingsRepository;
+    TimingsRepository timingsRepository;
 
     @Bean
     public IntegrationFlow roomsInfoFlow(EntityManager entityManager) {
@@ -55,9 +55,9 @@ public class BookMeetingRoomFlow {
                         .persistMode(PersistMode.MERGE), e -> e.transactional())
                 .enrichHeaders(h -> h.headerExpression("bookingId", "payload.bookingId"))
                 .<BookRoomApp>handle((p,h) -> {
-                    Optional<RoomTimings> timings = timingsRepository.findByRoomCodeAndTimeId(p.getRoomInfo().getRoomId(), p.getRoomInfo().getTimeId());
+                    Optional<Timings> timings = timingsRepository.findByRoomCodeAndTimeId(p.getRoomInfo().getRoomId(), p.getRoomInfo().getTimeId());
                     if(timings.isPresent()){
-                        RoomTimings roomTimings = timings.get();
+                        Timings roomTimings = timings.get();
                         roomTimings.setIsAvailable(false);
                         timingsRepository.save(roomTimings);
                     }
