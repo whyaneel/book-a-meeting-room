@@ -29,4 +29,8 @@ Application Should be Running at http://localhost:8080/
     }
     
 - Retrieve Available Rooms Info
-    GET http://localhost:8080/api/rooms     
+    GET http://localhost:8080/api/rooms
+    
+H2 Console:
+http://localhost:8080/api/h2/
+        
