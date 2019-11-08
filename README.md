@@ -52,8 +52,3 @@ Application Should be Running at http://localhost:9000/
 
 ### Deploy thru AWS CodePipeline
 - CodePipeline to pickup from Github
-
-
-
-
-
