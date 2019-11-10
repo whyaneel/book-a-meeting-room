@@ -1,38 +1,17 @@
 # book-a-meeting-room
 Meeting Room Booking Facility with WebSockets in Spring Boot App
 
-To enable lombok:
 
-1. File -> Settings -> Build, Execution, Deployment -> Annotation Processors -> Enable Annotation Processing;
-2. Intellij IDEA -> Preferences -> Plugins ->Browse Repositories-> Search for "Lombok"-> install plugin -> Apply and restart IDEA
+The Service Layer is implemented in DSL integration flow using H2.
 
-The Application is implemented in DSL integration flow using H2
 
-Application Should be Running at http://localhost:8080/
-
-- Book Meeting Room App
+- Book Meeting Room Application
     
-    POST http://localhost:8080/api/bot/booking
-    Request:
-    {
-    	"userInfo": {
-    		"empId" : "101",
-    		"email" : "xx@xxx.com"
-    	},
-    	"roomInfo": {
-    		"roomId" : "01",
-    		"timeId" : "101"
-    	}
-    }
-    Response:
-    {
-        "bookingId": "20191105564329850"
-    }
+    This service layer stores the meeting room booking request along with user details and provides the
+    booking reference id to the client.
     
 - Retrieve Available Rooms Info
     
-    GET http://localhost:8080/api/rooms
+    This service provides the available meeting rooms and timings.
     
-H2 Console:
-http://localhost:8080/api/h2/
         

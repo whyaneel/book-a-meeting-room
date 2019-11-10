@@ -51,7 +51,6 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-tomcat"
 
-    //compile "com.h2database:h2:1.3.148"
     runtime "com.h2database:h2"
 
 }

@@ -1,28 +1,19 @@
 package com.prototype.booking.api;
 
-import com.prototype.booking.api.referencedata.Timings;
 import com.prototype.booking.api.referencedata.TimingsRepository;
-import com.prototype.booking.api.referencedata.RoomsInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
-import org.springframework.integration.dsl.Transformers;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.http.HttpHeaders;
 import org.springframework.integration.http.dsl.Http;
-import org.springframework.integration.jpa.dsl.Jpa;
-import org.springframework.integration.jpa.support.PersistMode;
-import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.support.MessageBuilder;
 
 import javax.persistence.EntityManager;
-import java.util.Optional;
 
 @Configuration
 @Slf4j
@@ -31,6 +22,9 @@ public class BookMeetingRoomFlow {
     @Autowired
     TimingsRepository timingsRepository;
 
+    @Autowired
+    BookMeetingRoom.RoomServiceGateway roomServiceGateway;
+
     @Bean
     public IntegrationFlow roomsInfoFlow(EntityManager entityManager) {
         return IntegrationFlows.from(Http.inboundGateway("/rooms")
@@ -38,8 +32,7 @@ public class BookMeetingRoomFlow {
                 .errorChannel("globalErrorChannel.input"))
                 .wireTap("loggingFlow.input")
                 .log(LoggingHandler.Level.INFO, this.getClass().getName(), m -> "Retrieving Total Rooms Information")
-                .handle(Jpa.retrievingGateway(entityManager).entityClass(RoomsInfo.class))
-                .transform(Transformers.toJson())
+                .handle((p,h) -> roomServiceGateway.getRoomsInfo("all")) //Spring Integration currently has no concept of a message without a payload
                 .get();
     }
 
@@ -51,32 +44,15 @@ public class BookMeetingRoomFlow {
                 .errorChannel("globalErrorChannel.input"))
                 .wireTap("loggingFlow.input")
                 .log(LoggingHandler.Level.INFO, this.getClass().getName(), m -> "Start - Booking Meeting Room")
-                .handle(Jpa.updatingGateway(entityManager).entityClass(BookRoomApp.class)
-                        .persistMode(PersistMode.MERGE), e -> e.transactional())
-                .enrichHeaders(h -> h.headerExpression("bookingId", "payload.bookingId"))
                 .<BookRoomApp>handle((p,h) -> {
-                    Optional<Timings> timings = timingsRepository.findByRoomCodeAndTimeId(p.getRoomInfo().getRoomId(), p.getRoomInfo().getTimeId());
-                    if(timings.isPresent()){
-                        Timings roomTimings = timings.get();
-                        roomTimings.setIsAvailable(false);
-                        timingsRepository.save(roomTimings);
-                    }
-                    log.info("End - Booking Meeting Room, Booking Id: {}", h.get("bookingId"));
-                    return MessageBuilder.withPayload(BookResponse.builder().bookingId(p.getBookingId()).build()).build();
+                    BookRoomApp app = roomServiceGateway.bookRoom(p);
+                    log.info("End - Booking Meeting Room, Booking Id: {}", app.getBookingId());
+                    return MessageBuilder.withPayload(BookResponse.builder().bookingId(app.getBookingId()).build()).build();
                 })
                 .get();
-
     }
 
-    @Bean
-    public IntegrationFlow globalErrorChannel(){
-        return f -> f.<MessagingException>handle((p,h) -> {
-            return MessageBuilder
-                    .withPayload(Strings.EMPTY)
-                    .setHeaderIfAbsent(HttpHeaders.STATUS_CODE, HttpStatus.INTERNAL_SERVER_ERROR)
-                    .build();
-            });
-    }
+
 
     @Bean
     public IntegrationFlow loggingFlow() {

@@ -3,8 +3,6 @@ package com.prototype.booking.api;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.prototype.booking.api.referencedata.RoomsInfo;
-import com.prototype.booking.api.referencedata.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
