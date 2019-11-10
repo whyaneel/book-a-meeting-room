@@ -1,17 +1,38 @@
-# book-a-meeting-room
-Meeting Room Booking Facility with WebSockets in Spring Boot App
-
-
-The Service Layer is implemented in DSL integration flow using H2.
-
-
-- Book Meeting Room Application
-    
-    This service layer stores the meeting room booking request along with user details and provides the
-    booking reference id to the client.
-    
-- Retrieve Available Rooms Info
-    
-    This service provides the available meeting rooms and timings.
-    
+# Meeting Room Booking Facility with WebSockets in Spring Boot App
         
+## WebSocket Protocol Setup
+### Broker Backed Messaging
+- StompEndpoint - `/ws-prototype`
+    - StompClient is created with above endpoint, means WebSocket connection is established.
+- In Memory MessageBroker
+    - Application DestinationPrefixes - `/bot/booking`  
+        - Any messages that come to above prefix will be routed to `@MessageMapping(“/message/{uuid}”)` annotated methods
+            - @Payload ChatMessage
+    - SimpleBroker - `/meetingroom` 
+        - `@SendTo("/meetingroom/{uuid}”)` will carry the message (whatever method returns) back to the clients, whoever subscribed to `/meetingroom/{uuid}` 
+
+### WebSocket Event Listeners
+- Log when a new client is connected and disconnected
+    - Connect
+    - Disconnect
+
+## Database and Service
+### Database Schema Design
+- H2 
+- Init Script For Reference Data
+
+### Service Layer Should Do Below (Implemented in DSL integration)
+- Available Meeting Rooms
+- Available Timings For Selected Meeting Room
+- Book Meeting Room
+- Release Meeting Room (pending)
+
+## Environment Setup
+### Dockerizing
+- Dockerfile
+
+### Deploy to Elastic BeanStalk
+- Simply deploy the jar file or docker image
+
+### Deploy thru AWS CodePipeline
+- CodePipeline to pickup from Github
