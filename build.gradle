@@ -1,42 +1,21 @@
-
-buildscript {
-    ext {
-        springBootVersion = '2.2.0.RELEASE'
-    }
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
+plugins {
+    id 'org.springframework.boot' version '2.2.0.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
 }
 
-
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'war'
-apply plugin: 'org.springframework.boot'
-
+group = 'com.prototype.booking'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
 
 repositories {
     mavenCentral()
 }
 
-
-springBoot {
-    mainClassName = 'com.org.desi.Application'
-}
-
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-bootWar {
-    archiveName = 'book-meeting-room.war'
-}
-
 dependencies {
-    compile "joda-time:joda-time:2.2"
-    testCompile "junit:junit:4.12"
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -45,17 +24,13 @@ dependencies {
     compile 'org.springframework.integration:spring-integration-file'
     compile 'org.springframework.integration:spring-integration-http'
     compile 'org.springframework.integration:spring-integration-jpa'
-
-    compileOnly "org.projectlombok:lombok:1.18.10"
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
-
     compile "org.springframework.boot:spring-boot-starter-tomcat"
-
     runtime "com.h2database:h2"
-
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
-configurations {
-    runtime.exclude module: 'xml-apis'
+test {
+    useJUnitPlatform()
 }
-
