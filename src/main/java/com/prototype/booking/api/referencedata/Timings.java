@@ -22,7 +22,7 @@ public class Timings {
 
     @JsonIgnore
     @Column
-    private String roomCode;
+    private String roomId;
 
     @Column
     private Boolean isAvailable;

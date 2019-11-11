@@ -18,8 +18,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @Data
 @Builder
 @NoArgsConstructor @AllArgsConstructor
-@Entity(name="BOOK_ROOM_APP")
-public class BookRoomApp {
+@Entity(name="MEETING_ROOM_BOOKING")
+public class MeetingRoomBooking {
 
     @Id
     @GeneratedValue(generator="system-uuid")
@@ -28,15 +28,14 @@ public class BookRoomApp {
     @Column(name="ID",length=50)
     private String id;
 
-    @JsonIgnore
-    @Column(name="BOOKING_ID",length=50)
-    private String bookingId;
-
     @Embedded
     private UserInfo userInfo;
 
     @Embedded
     private RoomInfo roomInfo;
+
+    @Embedded
+    private MeetingRoomReference meetingRoomReference;
 
     @JsonIgnore
     @Column(name = "CREATED_DT", nullable = false)
@@ -57,7 +56,7 @@ public class BookRoomApp {
         StringBuilder refNumber =
                 new StringBuilder(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         refNumber.append(identifier);
-        bookingId = refNumber.toString();
+        meetingRoomReference = MeetingRoomReference.builder().bookingId(refNumber.toString()).build();
     }
 
     @PreUpdate
@@ -87,6 +86,13 @@ public class BookRoomApp {
 
     }
 
+    @Embeddable
+    @Data
+    @Builder @NoArgsConstructor @AllArgsConstructor
+    public static class MeetingRoomReference {
+        @Column(name="BOOKING_ID",length=50)
+        private String bookingId;
+    }
 
 
 }

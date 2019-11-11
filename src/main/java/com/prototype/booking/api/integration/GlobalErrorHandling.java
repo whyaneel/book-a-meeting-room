@@ -1,4 +1,4 @@
-package com.prototype.booking.api;
+package com.prototype.booking.api.integration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;

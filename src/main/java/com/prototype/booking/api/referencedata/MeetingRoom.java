@@ -13,19 +13,19 @@ import java.util.List;
 @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name ="MEETING_ROOM")
-public class RoomsInfo {
+public class MeetingRoom {
 
     @Id
     @Column
-    private String roomId;
+    private String id;
 
     @Column
-    private String roomName;
+    private String name;
 
     @Column
     private Integer capacity;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "roomCode", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "roomId", cascade = CascadeType.ALL)
     private List<Timings> roomTimings;
 
 }

@@ -1,6 +1,7 @@
-package com.prototype.booking.api;
+package com.prototype.booking.api.integration;
 
-import com.prototype.booking.api.referencedata.RoomsInfo;
+import com.prototype.booking.api.MeetingRoomBooking;
+import com.prototype.booking.api.referencedata.MeetingRoom;
 import com.prototype.booking.api.referencedata.Timings;
 import com.prototype.booking.api.referencedata.TimingsRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -25,19 +26,19 @@ import java.util.Optional;
 @EnableIntegration
 @IntegrationComponentScan
 @Slf4j
-public class BookMeetingRoom {
+public class RoomServiceGateway {
 
     @Autowired
     TimingsRepository timingsRepository;
 
-    @MessagingGateway(name = "roomServiceGateway", errorChannel = "roomServiceError")
-    public interface RoomServiceGateway {
+    @MessagingGateway(name = "roomService", errorChannel = "roomServiceError")
+    public interface RoomService {
 
         @Gateway(requestChannel = "book.input")
-        BookRoomApp bookRoom(BookRoomApp bookRoomApp);
+        MeetingRoomBooking bookRoom(MeetingRoomBooking meetingRoomBooking);
 
         @Gateway(requestChannel = "retrieve.input")
-        List<RoomsInfo> getRoomsInfo(String p);
+        List<MeetingRoom> getRoomsInfo(String p);
     }
 
 
@@ -45,25 +46,27 @@ public class BookMeetingRoom {
     public IntegrationFlow book(EntityManager entityManager) {
         return f -> f.log(LoggingHandler.Level.INFO, this.getClass().getName(),
                 m -> "Start - Saving the User and Room Info")
-                .handle(Jpa.updatingGateway(entityManager).entityClass(BookRoomApp.class)
+                .handle(Jpa.updatingGateway(entityManager).entityClass(MeetingRoomBooking.class)
                     .persistMode(PersistMode.MERGE), e -> e.transactional())
-                .<BookRoomApp>handle((p,h) -> {
-                    Optional<Timings> timings = timingsRepository.findByRoomCodeAndTimeId(p.getRoomInfo().getRoomId(), p.getRoomInfo().getTimeId());
+                .<MeetingRoomBooking>handle((p, h) -> {
+                    Optional<Timings> timings = timingsRepository.findByRoomIdAndTimeId(p.getRoomInfo().getRoomId(), p.getRoomInfo().getTimeId());
                     if(timings.isPresent()){
                         var roomTimings = timings.get();
                         roomTimings.setIsAvailable(false);
                         timingsRepository.save(roomTimings);
                     }
                     return p;
-                }).log(LoggingHandler.Level.INFO, this.getClass().getName(),
-                        m -> "End - Saving the User and Room Info with Booking ID " + m.getPayload())
+                })
+                .<MeetingRoomBooking>handle((p,h) -> p)
+                .log(LoggingHandler.Level.INFO, this.getClass().getName(),
+                        m -> "End - Saving the User and Room Info " + m.getPayload())
                 .bridge();
     }
 
     @Bean
     public IntegrationFlow retrieve(EntityManager entityManager) {
         return f -> f
-                .handle(Jpa.retrievingGateway(entityManager).entityClass(RoomsInfo.class))
+                .handle(Jpa.retrievingGateway(entityManager).entityClass(MeetingRoom.class))
                 .bridge();
     }
 

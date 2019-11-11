@@ -1,5 +1,6 @@
-package com.prototype.booking.api;
+package com.prototype.booking.api.integration;
 
+import com.prototype.booking.api.MeetingRoomBooking;
 import com.prototype.booking.api.referencedata.TimingsRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +12,18 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.handler.LoggingHandler;
 import org.springframework.integration.http.HttpHeaders;
 import org.springframework.integration.http.dsl.Http;
-import org.springframework.messaging.support.MessageBuilder;
 
 import javax.persistence.EntityManager;
 
 @Configuration
 @Slf4j
-public class BookMeetingRoomFlow {
+public class RoomServiceFlow {
 
     @Autowired
     TimingsRepository timingsRepository;
 
     @Autowired
-    BookMeetingRoom.RoomServiceGateway roomServiceGateway;
+    RoomServiceGateway.RoomService roomServiceGateway;
 
     @Bean
     public IntegrationFlow roomsInfoFlow(EntityManager entityManager) {
@@ -38,17 +38,18 @@ public class BookMeetingRoomFlow {
 
     @Bean
     public IntegrationFlow bookRoomFlow(EntityManager entityManager) {
-        return IntegrationFlows.from(Http.inboundGateway("/bot/booking")
-                .requestPayloadType(BookRoomApp.class)
+        return IntegrationFlows.from(Http.inboundGateway("/booking")
+                .requestPayloadType(MeetingRoomBooking.class)
                 .requestMapping(m -> m.methods(HttpMethod.POST))
                 .errorChannel("globalErrorChannel.input"))
                 .wireTap("loggingFlow.input")
                 .log(LoggingHandler.Level.INFO, this.getClass().getName(), m -> "Start - Booking Meeting Room")
-                .<BookRoomApp>handle((p,h) -> {
-                    BookRoomApp app = roomServiceGateway.bookRoom(p);
-                    log.info("End - Booking Meeting Room, Booking Id: {}", app.getBookingId());
-                    return MessageBuilder.withPayload(BookResponse.builder().bookingId(app.getBookingId()).build()).build();
+                .<MeetingRoomBooking>handle((p, h) -> {
+                    MeetingRoomBooking app = roomServiceGateway.bookRoom(p);
+                    log.info("End - Booking Meeting Room, Booking Id: {}", app.getMeetingRoomReference().getBookingId());
+                    return app;
                 })
+                .transform(MeetingRoomBooking.class, p -> p.getMeetingRoomReference())
                 .get();
     }
 
