@@ -1,5 +1,4 @@
 # Meeting Room Booking Facility with WebSockets in Spring Boot App
-        
 ## WebSocket Protocol Setup
 ### Broker Backed Messaging
 - StompEndpoint - `/ws-prototype`
