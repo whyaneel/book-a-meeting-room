@@ -1,5 +1,4 @@
 # Meeting Room Booking Facility with WebSockets in Spring Boot App
-
 ## WebSocket Protocol Setup
 ### Broker Backed Messaging
 - StompEndpoint - `/ws-prototype`
@@ -21,11 +20,11 @@
 - H2 
 - Init Script For Reference Data
 
-### Service Layer Should Do Below
+### Service Layer Should Do Below (Implemented in DSL integration)
 - Available Meeting Rooms
 - Available Timings For Selected Meeting Room
 - Book Meeting Room
-- Release Meeting Room
+- Release Meeting Room (pending)
 
 ## Environment Setup
 ### Dockerizing
@@ -36,8 +35,3 @@
 
 ### Deploy thru AWS CodePipeline
 - CodePipeline to pickup from Github
-
-
-
-
-
