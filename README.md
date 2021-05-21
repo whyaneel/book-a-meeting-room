@@ -27,8 +27,24 @@
 - Release Meeting Room (pending)
 
 ## Environment Setup
-### Dockerizing
-- Dockerfile
+### Dockerizing (From Local Machine)
+- Create a Bootable Jar
+```
+cd book-a-meeting-room
+./gradlew clean build
+```
+
+- Create a Docker Image (from Dockerfile)
+```
+docker build --no-cache -t book-a-meeting-room-app .
+```
+
+- Run The Application
+```
+docker run -p 9000:8080 book-a-meeting-room-app
+```
+Application Should be Running at http://localhost:9000/
+
 
 ### Deploy to Elastic BeanStalk
 - Simply deploy the jar file or docker image
